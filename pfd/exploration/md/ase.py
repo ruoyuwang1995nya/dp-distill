@@ -5,17 +5,14 @@ from pathlib import Path
 from typing import Optional, Dict, Any, Union
 from dataclasses import dataclass, asdict, field
 
-import ase
 import numpy as np
 from ase import Atoms, units
 from ase.io import read
 from ase.io.trajectory import Trajectory
-from ase.md.langevin import Langevin
 from ase.md.nose_hoover_chain import NoseHooverChainNVT
 from ase.md.nptberendsen import NPTBerendsen
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.optimize import LBFGS
-from ase.filters import UnitCellFilter, ExpCellFilter
+from ase.filters import UnitCellFilter
 from pfd.constants import ase_log_name, ase_traj_name
 
 
@@ -137,7 +134,19 @@ class MDRunner:
         """Initialize Maxwell-Boltzmann velocity distribution."""
         if seed is not None:
             np.random.seed(seed)
-        MaxwellBoltzmannDistribution(self.atoms, temperature_K=temperature)
+        from ase.md.velocitydistribution import Stationary
+
+        # Since ase 3.29.0, MaxwellBoltzmannDistribution will be replaced by thermalize_momenta
+        try:
+            from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+            MaxwellBoltzmannDistribution(self.atoms, temperature_K=temperature)
+        except Exception:
+            from ase.md.velocitydistribution import thermalize_momenta
+            thermalize_momenta(self.atoms, temperature_K=temperature)
+
+        # Remove total translational momentum
+        Stationary(self.atoms)
+
         self.logger.info(f"Initialized velocities at {temperature} K")
     
     def run_npt(self, 

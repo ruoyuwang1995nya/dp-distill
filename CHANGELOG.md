@@ -2,6 +2,27 @@
 
 <!-- version list -->
 
+## v0.2.7 (2026-07-24)
+
+### Bug Fixes
+
+- Remove total translational momentum when initializing MD velocities to prevent unphysical
+  translations.
+  ([`2ca09f8`](https://github.com/qchempku2017/pfd-kit/commit/2ca09f8180e3a710369e6a48930f08032e193593))
+
+
+## v0.2.6 (2026-07-16)
+
+### Bug Fixes
+
+- Update input name init_model in download settings to fix downloading issue and enhance download
+  command helper text.
+  ([`7814f41`](https://github.com/qchempku2017/pfd-kit/commit/7814f410f4314a8ba0ba10b7be37198998f1cdf4))
+
+- Version in __init__.py
+  ([`ea2507f`](https://github.com/qchempku2017/pfd-kit/commit/ea2507fc07d4cfcbd2a27d47267c88a3fc575ffe))
+
+
 ## v0.10.13 (2026-07-15)
 
 ### Bug Fixes
